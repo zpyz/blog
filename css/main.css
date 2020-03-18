@@ -33,12 +33,16 @@ body {
     height: 100px;
     margin-bottom: -100px;
     line-height: 100px;
-    background: #1e9fff;
+    background: #833233;
 }
 
 .lay-blog .logo-img {
     height: 65px;
-    padding-right: 10px;
+    width: 65px;
+}
+
+.lay-blog .logo-text {
+    color: white;
 }
 
 .lay-blog .blog-seach {
@@ -99,7 +103,7 @@ body {
 
 .lay-blog .blog-nav ul li.layui-this:after,
 .lay-blog .layui-nav-bar {
-    background: #C1E4FF;
+    background: #d06f70;
 }
 
 .lay-blog .blog-nav .personal {
@@ -133,7 +137,7 @@ body {
     left: 0px;
     top: 100px;
     text-align: center;
-    background: #1e9fff;
+    background: #833233;
     display: none;
     z-index: 2;
 }
