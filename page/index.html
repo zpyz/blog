@@ -28,10 +28,9 @@
             var html = '<div class="item">';
             html += '<div class="item-box  layer-photos-demo1 layer-photos-demo">';
             html += '<h3><a href="#/details/id=' + blog.number + '">' + blog.title + '</a></h3>';
-            html += '<h5>发布于：<span>' + blog.created_at.substr(0, 10) + '</span></h5>';
-            html += '<p>' + blog.body + '</p>';
+            html += '<h5> ' + blog.user.login + ' 发布于：<span>' + blog.created_at.substr(0, 10) + '</span></h5>';
             html += '</div>';
-            html += '<div class="comment count"><a href="#/comment/id=' + blog.number + '">评论</a><a href="javascript:;" class="like">点赞</a></div>';
+            html += '<div class="comment count"><a href="#/details/id=' + blog.number + '">评论' + (blog.comments > 0 ? '(' + blog.comments + ')' : '') + '</a><a href="javascript:;" class="like">点赞</a></div>';
             html += '</div>';
             return html;
         }

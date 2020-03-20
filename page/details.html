@@ -1,46 +1,84 @@
 <title>详情</title>
 <template>
-    <div class="container container-message container-details">
+    <div class="container container-message container-details container-comment">
         <div class="contar-wrap">
-            <div class="item">
-                <div class="item-box  layer-photos-demo1 layer-photos-demo">
-                    <h3><a href="#/details">Hello World</a></h3>
-                    <h5>发布于：<span>刚刚</span></h5>
-                    <p>Hello World</p>
-                    <img src="img/item.png" alt="">
-                    <div class="count layui-clear">
-                        <span class="pull-left">阅读 <em>100000+</em></span>
-                        <span class="pull-right like"><i class="layui-icon layui-icon-praise"></i><em>999</em></span>
-                    </div>
-                </div>
+            <div class="item" id="blog_item">
+
             </div>
-            <a name="comment"> </a>
             <div class="comt layui-clear">
                 <a href="javascript:void(0)" class="pull-left">评论</a>
-                <a href="#/comment" class="pull-right">写评论</a>
             </div>
+            <form class="layui-form" action="">
+                <div class="layui-form-item layui-form-text">
+                    <textarea class="layui-textarea" style="resize:none" placeholder="写点什么啊" disabled></textarea>
+                </div>
+                <div class="btnbox">
+                    <!--<a href="#/details" id="sure">
+                        确定
+                    </a>-->
+                </div>
+            </form>
             <div id="LAY-msg-box">
-                <div class="info-item">
-                    <img class="info-img" src="img/info-img.png" alt="">
-                    <div class="info-text">
-                        <p class="title count">
-                            <span class="name">一片空白</span>
-                            <span class="info-img like"><i class="layui-icon layui-icon-praise"></i>5.8万</span>
-                        </p>
-                        <p class="info-intr">Hello World</p>
-                    </div>
-                </div>
-                <div class="info-item">
-                    <img class="info-img" src="img/info-img.png" alt="">
-                    <div class="info-text">
-                        <p class="title count">
-                            <span class="name">一片空白</span>
-                            <span class="info-img like"><i class="layui-icon layui-icon-praise"></i>5.8万</span>
-                        </p>
-                        <p class="info-intr">Hello World</p>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
-</template>>
+</template>
+<script>
+    (function () {
+        var pageView = layui.pageView;
+        var $ = layui.jquery;
+        var converter = new showdown.Converter();
+        var pageInfo = pageView.getPageInfo();
+        var blogList = $('#blog_item');
+        var commentList = $('#LAY-msg-box');
+        loadPage(pageInfo);
+
+        pageView.on('change', function (data) {
+            console.log(data);
+            loadPage(data);
+        });
+
+        function makeItem(blog) {
+            var html = '<div class="item-box  layer-photos-demo1 layer-photos-demo">';
+            html += '<h3><a href="#/details/id=' + blog.number + '">' + blog.title + '</a></h3>';
+            html += '<h5> ' + blog.user.login + ' 发布于：<span>' + blog.created_at.substr(0, 10) + '</span></h5>';
+            html += '<div class="markdown-body">' + converter.makeHtml(blog.body) + '</div>';
+            html += '</div>';
+            return html;
+        }
+
+        function makeComment(comment) {
+            var html = '<div class="info-item">';
+            html += '<img class="info-img" width="68" height="68" src="' + comment.user.avatar_url + '" alt="Avatar">';
+            html += '<div class="info-text"><p class="title count"><span class="name">' + comment.user.login + '</span></p></div>';
+            html += '<div class="info-intr markdown-body">' + converter.makeHtml(comment.body) + '</div>';
+            html += '</div>';
+            return html;
+        }
+
+        function loadPage(pageInfo) {
+            $.ajax({
+                url: 'https://api.github.com/repos/zpyz/blog/issues/' + pageInfo.search.id,
+                data: {},
+                success: function (res) {
+                    console.log(res);
+                    blogList.html(makeItem(res));
+                }
+            });
+            $.ajax({
+                url: 'https://api.github.com/repos/zpyz/blog/issues/' + pageInfo.search.id + '/comments',
+                data: {},
+                success: function (res) {
+                    console.log(res);
+                    commentList.html('');
+                    if (res && res.length) {
+                        for (var i = 0; i < res.length; i++) {
+                            commentList.append(makeComment(res[i]));
+                        }
+                    }
+                }
+            });
+        }
+    })();
+</script>
